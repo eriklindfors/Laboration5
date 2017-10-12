@@ -13,10 +13,10 @@ public class Controller {
         this.view = view;
         this.model = model;
         
-        view.getPlayingSurface().setOnMouseClicked(e ->{
+        /*view.getPlayingSurface().setOnMouseClicked(e ->{
             Point2D position = view.getArrayPosition();
             model.mouseClickedAt((int)position.getY(), (int)position.getX());
             view.updateView();  
-        });
+        });*/
     }
 }
