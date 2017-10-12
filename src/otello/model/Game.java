@@ -1,20 +1,18 @@
 package otello.model;
 
-import otello.view.View;
-
 public class Game {
 
-    public static final int MAX_NR_OF_GAME_PIECES_PER_PLAYER = 32;
+    private static final int MAX_NR_OF_GAME_PIECES_PER_PLAYER = 32;
     
     private PlayingField playingField;
     private Player playerOne, playerTwo;
-    private Player currentPlayer;
+    private State currentColorPlaying;
 
     public Game() {
+        currentColorPlaying = State.BLACK;
         playingField = new PlayingField();
-        playerOne = new Player(State.WHITE, MAX_NR_OF_GAME_PIECES_PER_PLAYER);
-        playerTwo = new Player(State.BLACK, MAX_NR_OF_GAME_PIECES_PER_PLAYER);
-        currentPlayer = playerOne;
+        playerOne = new Player(State.BLACK, MAX_NR_OF_GAME_PIECES_PER_PLAYER);
+        playerTwo = new Player(State.WHITE, MAX_NR_OF_GAME_PIECES_PER_PLAYER);
     }
 
     public void updatePlayingField(int row, int column) {
@@ -25,12 +23,12 @@ public class Game {
             //Up
             if (row > 1) {
                 tempRow--;
-                if (playingField.getState(tempRow, tempColumn) == flip(currentPlayer.getPlayerColor())) {
+                if (playingField.getState(tempRow, tempColumn) == flip(currentColorPlaying)) {
                     do {
                         tempRow--;
-                        if (playingField.getState(tempRow, tempColumn) == currentPlayer.getPlayerColor()) {
+                        if (playingField.getState(tempRow, tempColumn) == currentColorPlaying) {
                             for (int i = row; i > tempRow; i--) {
-                                playingField.setState(i, tempColumn, currentPlayer.getPlayerColor());
+                                playingField.setState(i, tempColumn, currentColorPlaying);
                             }
                         } else if (playingField.getState(tempRow, tempColumn) == State.EMPTY) {
                             break;
@@ -43,12 +41,12 @@ public class Game {
             //Down
             if(row < playingField.getRows() - 2){
                 tempRow++;
-                if (playingField.getState(tempRow, tempColumn) == flip(currentPlayer.getPlayerColor())) {
+                if (playingField.getState(tempRow, tempColumn) == flip(currentColorPlaying)) {
                     do {
                         tempRow++;
-                        if (playingField.getState(tempRow, tempColumn) == currentPlayer.getPlayerColor()) {
+                        if (playingField.getState(tempRow, tempColumn) == currentColorPlaying) {
                             for (int i = row; i < tempRow; i++) {
-                                playingField.setState(i, tempColumn, currentPlayer.getPlayerColor());
+                                playingField.setState(i, tempColumn, currentColorPlaying);
                             }
                         } else if (playingField.getState(tempRow, tempColumn) == State.EMPTY) {
                             break;
@@ -62,12 +60,12 @@ public class Game {
             //Right
             if (column < playingField.getColumns() - 2) {
                 tempColumn++;
-                if (playingField.getState(tempRow, tempColumn) == flip(currentPlayer.getPlayerColor())) {
+                if (playingField.getState(tempRow, tempColumn) == flip(currentColorPlaying)) {
                     do {
                         tempColumn++;
-                        if (playingField.getState(tempRow, tempColumn) == currentPlayer.getPlayerColor()) {
+                        if (playingField.getState(tempRow, tempColumn) == currentColorPlaying) {
                             for (int i = column; i < tempColumn; i++) {
-                                playingField.setState(tempRow, i, currentPlayer.getPlayerColor());
+                                playingField.setState(tempRow, i, currentColorPlaying);
                             }
                         } else if (playingField.getState(tempRow, tempColumn) == State.EMPTY) {
                             break;
@@ -80,12 +78,12 @@ public class Game {
             //Left
             if (column > 1) {
                 tempColumn--;
-                if (playingField.getState(tempRow, tempColumn) == flip(currentPlayer.getPlayerColor())) {
+                if (playingField.getState(tempRow, tempColumn) == flip(currentColorPlaying)) {
                     do {
                         tempColumn--;
-                        if (playingField.getState(tempRow, tempColumn) == currentPlayer.getPlayerColor()) {
+                        if (playingField.getState(tempRow, tempColumn) == currentColorPlaying) {
                             for (int i = column; i > tempColumn; i--) {
-                                playingField.setState(tempRow, i, currentPlayer.getPlayerColor());
+                                playingField.setState(tempRow, i, currentColorPlaying);
                             }
                         } else if (playingField.getState(tempRow, tempColumn) == State.EMPTY) {
                             break;
@@ -95,21 +93,22 @@ public class Game {
             }
             tempColumn = column;
 
-            if (currentPlayer == playerOne) {
+            if (currentColorPlaying == State.WHITE) {
                 playingField.setState(row, column, State.WHITE);
             } else {
                 playingField.setState(row, column, State.BLACK);
             }
-        }
 
+            updateCurrentPlayer();
+        }
     }
     
     public void updateCurrentPlayer(){
-        if(currentPlayer == playerOne){
-            currentPlayer = playerTwo;
+        if(currentColorPlaying == State.WHITE){
+            currentColorPlaying = State.BLACK;
         }
         else{
-            currentPlayer = playerOne;
+            currentColorPlaying = State.WHITE;
         }
     }
 
@@ -117,12 +116,8 @@ public class Game {
         return playingField;
     }
 
-    public Player getCurrentPlayer() {
-        return currentPlayer;
-    }
-    
-    public void removePieceFromCurrentPlayer(){
-        currentPlayer.setGamePiecesRemaining(currentPlayer.getGamePiecesRemaining() - 1);
+    public State getCurrentColorPlaying() {
+        return currentColorPlaying;
     }
 
     private State flip(State state) {
@@ -134,5 +129,22 @@ public class Game {
             newState = State.WHITE;
         }
         return newState;
+    }
+
+    public int getMaxNrOfGamePiecesPerPlayer() {
+        return MAX_NR_OF_GAME_PIECES_PER_PLAYER;
+    }
+
+    public int getGamePiecesRemaining(String color) {
+        if(!color.toLowerCase().equals("0x000000ff") && !color.toLowerCase().equals("0xffffffff")){
+            throw new invalidColorException("Invalid color.");
+        }
+
+        if(color.toLowerCase().equals("0x000000ff")){
+            return playerOne.getGamePiecesRemaining();
+        }
+        else{
+            return playerTwo.getGamePiecesRemaining();
+        }
     }
 }

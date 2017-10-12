@@ -8,9 +8,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import otello.model.Game;
+
 import otello.model.Model;
-import otello.model.State;
+
 
 public class View extends BorderPane{
 
@@ -29,14 +29,14 @@ public class View extends BorderPane{
     
 
     public void initView() {
-        playingField = new PlayingSurface(model.getPlayingField().getRows(), model.getPlayingField().getColumns());
+        playingField = new PlayingSurface(model.getPlayingFieldRows(), model.getPlayingFieldColumns());
         arrayPosition = new Point2D(0, 0);
 
-        currentPlayer = new Label("Current Player: " + model.currentPlayer().getPlayerColor().toString());
+        currentPlayer = new Label("Current Player: " + model.getCurrentColorPlaying());
         currentPlayer.setFont(Font.font("Arial", 15));
         
-        whiteGamePieceStack = new GamePieceSideStack(Color.WHITE, Game.MAX_NR_OF_GAME_PIECES_PER_PLAYER);
-        blackGamePieceStack = new GamePieceSideStack(Color.BLACK, Game.MAX_NR_OF_GAME_PIECES_PER_PLAYER);
+        whiteGamePieceStack = new GamePieceSideStack(Color.WHITE, model.getMaximumGamePiecesPerPlayer());
+        blackGamePieceStack = new GamePieceSideStack(Color.BLACK, model.getMaximumGamePiecesPerPlayer());
         
         
         bottomHBox = new HBox();
@@ -48,9 +48,9 @@ public class View extends BorderPane{
         
         
         playingField.setOnMouseMoved(e -> {
-            arrayPosition = new Point2D((int)(e.getX() / (GamePiece.getGamePieceDiameter() + 1)), 
-                    (int)(e.getY() / (GamePiece.getGamePieceDiameter() + 1)));
-            //System.out.println("row: " + arrayPosition.getY() + " col: " + arrayPosition.getX());
+            arrayPosition = new Point2D((int)(e.getX() / (GamePiece.getGamePieceDiameter())),
+                    (int)(e.getY() / (GamePiece.getGamePieceDiameter())));
+            System.out.println("row: " + arrayPosition.getY() + " col: " + arrayPosition.getX());
         });
         
         playingField.setOnMouseDragged(e -> {
@@ -74,25 +74,20 @@ public class View extends BorderPane{
         playingField.getChildren().removeIf(n -> n instanceof GamePiece);
         
         
-        if(model.currentPlayer().getPlayerColor() == State.WHITE){
-            
-            
-            whiteGamePieceStack.setPieces(Color.WHITE, model.currentPlayer().getGamePiecesRemaining());
-            System.out.println("White remaining: " + model.currentPlayer().getGamePiecesRemaining());
+        if(model.getCurrentColorPlaying().equals(Color.WHITE.toString())){
+            whiteGamePieceStack.setPieces(Color.WHITE, model.getGamePiecesRemaining(Color.WHITE.toString()));
+            System.out.println("Whites remaining: " + model.getGamePiecesRemaining(Color.WHITE.toString()));
         }
         else{
-            
-            
-            blackGamePieceStack.setPieces(Color.BLACK, model.currentPlayer().getGamePiecesRemaining());
-            System.out.println("Black remaining: " + model.currentPlayer().getGamePiecesRemaining());
+            blackGamePieceStack.setPieces(Color.BLACK, model.getGamePiecesRemaining(Color.BLACK.toString()));
+            System.out.println("Blacks remaining: " + model.getGamePiecesRemaining(Color.BLACK.toString()));
         }
         
 
-        for (int i = 0; i < model.getPlayingField().getRows(); i++) {
-            for (int j = 0; j < model.getPlayingField().getColumns(); j++) {
-                State state = model.getPlayingField().getState(i, j);
-                if (state != State.EMPTY) {
-                    if (state == State.BLACK) {
+        for (int i = 0; i < model.getPlayingFieldRows(); i++) {
+            for (int j = 0; j < model.getPlayingFieldColumns(); j++) {
+                if(!model.isPlayingFieldPositionEmpty(i, j)){
+                    if (model.getPlayingFieldPositionColor(i, j).equals(Color.BLACK.toString())) {
                         playingField.setGamePiece(i, j, Color.BLACK);
                     } else {
                         playingField.setGamePiece(i, j, Color.WHITE);
@@ -101,7 +96,7 @@ public class View extends BorderPane{
             }
         }
         
-        currentPlayer.setText("Current Player: " + model.currentPlayer().getPlayerColor().toString());
+        currentPlayer.setText("Current Player: " + Color.web(model.getCurrentColorPlaying()));
     }
     
     

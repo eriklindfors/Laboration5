@@ -19,10 +19,6 @@ public class GamePieceSideStack extends VBox{
         this.getChildren().addAll(pieces);
     }
     
-    public GamePieceSideStack(){
-        this(Color.BLACK, Game.MAX_NR_OF_GAME_PIECES_PER_PLAYER);
-    }
-    
     public void setPieces(Color color, int numberOfPieces){
         pieces.clear();
         for(int i = 0; i < numberOfPieces; i++){

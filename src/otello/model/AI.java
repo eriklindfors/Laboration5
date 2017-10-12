@@ -11,10 +11,6 @@ public class AI extends Player{
         this.strategy = strategy;
     }
     
-    public AI(){
-        this(State.WHITE, Game.MAX_NR_OF_GAME_PIECES_PER_PLAYER, new AIStrategy());
-    }
-    
     public Point2D getMove(State[][] playingFieldState){
         return strategy.nextMove(playingFieldState, getPlayerColor());
     }

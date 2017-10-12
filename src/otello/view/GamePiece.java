@@ -5,7 +5,7 @@ import javafx.scene.shape.Circle;
 
 public class GamePiece extends Circle{
     
-    private static final double RADIUS = 30;
+    private static final double RADIUS = 60;
     
     public GamePiece(double posX, double posY, Color color){
         super(posX, posY, RADIUS, color);

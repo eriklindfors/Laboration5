@@ -14,7 +14,7 @@ public class Player {
     }
     
     public Player(){
-        this(State.BLACK, Game.MAX_NR_OF_GAME_PIECES_PER_PLAYER);
+        this(State.BLACK, 32);
     }
 
     public State getPlayerColor() {
@@ -25,7 +25,7 @@ public class Player {
         return gamePiecesRemaining;
     }
 
-    public void setGamePiecesRemaining(int gamePiecesRemaining) {
-        this.gamePiecesRemaining = gamePiecesRemaining;
+    public void decrementGamePieces() {
+        this.gamePiecesRemaining -= 1;
     }
 }
