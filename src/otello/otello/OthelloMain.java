@@ -5,7 +5,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import otello.controller.Controller;
 import otello.model.Model;
-import otello.view.View;
+import otello.view.MenuView;
+import otello.view.GameView;
 
 public class OthelloMain extends Application{
     
@@ -13,11 +14,13 @@ public class OthelloMain extends Application{
     public void start(Stage stage){
     
         Model model = new Model();
-        View view = new View(model);
-        Controller controller = new Controller(view, model);
+        GameView view = new GameView(model);
+        MenuView menuView = new MenuView();
+        Controller controller = new Controller(view, menuView, model);
         
         Scene scene = new Scene(view);
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
     

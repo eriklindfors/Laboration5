@@ -8,13 +8,8 @@ public class Model {
         game = new Game();
     }
 
-    public String getCurrentColorPlaying() {
-        if(game.getCurrentColorPlaying() == State.BLACK){
-            return "0x000000ff";
-        }
-        else{
-            return "0xffffffff";
-        }
+    public State getStateOfCurrentPlayer() {
+        return game.getCurrentColorPlaying();
     }
 
     public int getPlayingFieldRows() {
@@ -29,7 +24,7 @@ public class Model {
         return game.getMaxNrOfGamePiecesPerPlayer();
     }
 
-    public int getGamePiecesRemaining(String color) {
+    public int getGamePiecesRemaining(State color) {
         return game.getGamePiecesRemaining(color);
     }
 
@@ -40,21 +35,15 @@ public class Model {
         return false;
     }
 
-    public String getPlayingFieldPositionColor(int row, int column){
-        if(isPlayingFieldPositionEmpty(row, column)){
-            throw new playingFieldPosEmptyException("Cannot fetch color from empty position");
-        }
-        else{
-            if(game.getPlayingField().getState(row, column) == State.BLACK){
-                return "0x000000ff";
-            }
-            else{
-                return "0x00000000";
-            }
-        }
+    public State getPlayingFieldPositionState(int row, int column){
+        return game.getPlayingField().getState(row, column);
     }
 
     public void mouseClickedAt(int row, int column){
         game.updatePlayingField(row, column);
+    }
+    
+    public void reset(){
+        game.reset();
     }
 }

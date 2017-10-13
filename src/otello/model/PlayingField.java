@@ -49,4 +49,8 @@ public class PlayingField {
     public int getColumns(){
         return COLUMNS;
     }
+    
+    public void reset(){
+        initPlayingField();
+    }
 }

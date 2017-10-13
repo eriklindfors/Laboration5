@@ -3,7 +3,7 @@ package otello.model;
 public class Game {
 
     private static final int MAX_NR_OF_GAME_PIECES_PER_PLAYER = 32;
-    
+
     private PlayingField playingField;
     private Player playerOne, playerTwo;
     private State currentColorPlaying;
@@ -37,9 +37,9 @@ public class Game {
                 }
             }
             tempRow = row;
-            
+
             //Down
-            if(row < playingField.getRows() - 2){
+            if (row < playingField.getRows() - 2) {
                 tempRow++;
                 if (playingField.getState(tempRow, tempColumn) == flip(currentColorPlaying)) {
                     do {
@@ -54,9 +54,9 @@ public class Game {
                     } while (tempRow < playingField.getRows() - 1);
                 }
             }
-            
+
             tempRow = row;
-            
+
             //Right
             if (column < playingField.getColumns() - 2) {
                 tempColumn++;
@@ -74,7 +74,7 @@ public class Game {
                 }
             }
             tempColumn = column;
-            
+
             //Left
             if (column > 1) {
                 tempColumn--;
@@ -102,12 +102,11 @@ public class Game {
             updateCurrentPlayer();
         }
     }
-    
-    public void updateCurrentPlayer(){
-        if(currentColorPlaying == State.WHITE){
+
+    public void updateCurrentPlayer() {
+        if (currentColorPlaying == State.WHITE) {
             currentColorPlaying = State.BLACK;
-        }
-        else{
+        } else {
             currentColorPlaying = State.WHITE;
         }
     }
@@ -135,16 +134,25 @@ public class Game {
         return MAX_NR_OF_GAME_PIECES_PER_PLAYER;
     }
 
-    public int getGamePiecesRemaining(String color) {
-        if(!color.toLowerCase().equals("0x000000ff") && !color.toLowerCase().equals("0xffffffff")){
-            throw new invalidColorException("Invalid color.");
+    public int getGamePiecesRemaining(State color) {
+        switch(color){
+            case WHITE:{
+                return playerOne.getGamePiecesRemaining();
+            }
+            case BLACK:{
+                return playerTwo.getGamePiecesRemaining();
+            }
+            default:{
+                throw new IllegalPlayerColorException("Illegal Player color.");
+            }
+            
         }
-
-        if(color.toLowerCase().equals("0x000000ff")){
-            return playerOne.getGamePiecesRemaining();
-        }
-        else{
-            return playerTwo.getGamePiecesRemaining();
-        }
+    }
+    
+    public void reset(){
+        currentColorPlaying = State.BLACK;
+        playingField.reset();
+        playerOne = new Player(State.BLACK, MAX_NR_OF_GAME_PIECES_PER_PLAYER);
+        playerTwo = new Player(State.WHITE, MAX_NR_OF_GAME_PIECES_PER_PLAYER);
     }
 }
